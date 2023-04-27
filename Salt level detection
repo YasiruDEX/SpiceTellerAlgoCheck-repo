@@ -1,0 +1,46 @@
+int Salt_level = 80;
+
+int Salt_ate = 0;
+
+void setup() {
+  Serial.begin(9600);  // Initialize serial communication
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  //Serial.println(currentTime);
+  
+  if (Serial.available() > 0) {  // If there's something in the serial buffer
+    String input = Serial.readStringUntil('\n');  // Read the input message
+    int Salt_level_new = input.toInt();
+
+    if (Salt_level_new > Salt_level){
+      Serial.print("Did you add salt?");
+      int Start_time = millis();
+      while(true){
+        if (millis() - Start_time >= 60*1000){
+          Salt_level = Salt_level_new;
+          Serial.println("Weight addition neglected");
+          break;
+        }
+        int X = analogRead(A0);
+        //Serial.println(millis() - Start_time);
+        if (X > 1000){
+          Serial.print("You added: ");  // Print a message indicating what was sent
+          int Salt_added = -(Salt_level-Salt_level_new);
+          Serial.println(Salt_added);  // Print the input message
+          Salt_level = Salt_level_new;
+          break;
+        }
+        }
+      }
+      
+    else{
+    Serial.print("You ate: ");  // Print a message indicating what was sent
+    Salt_ate = Salt_level-Salt_level_new;
+    Serial.println(Salt_ate);  // Print the input message
+    Salt_level = Salt_level_new;
+    }
+  }
+}
+  
